@@ -85,8 +85,7 @@ void gcd(long phi_f, long e, struct gcdstruct *gcds,
 
 }
 
-void crack_d(long phi_f, long e, struct gcdstruct *gcds, 
-	struct rowpointers *rps)
+void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
 {
 
 	long temp = 0;	
@@ -144,14 +143,13 @@ int main(int argc, char * argv[])
 
 	phi_f = (p-1)*(q-1);
 
-	printf("\n");
-	printf("------RSA-DECRYPT-LITE------\n");
+	printf("\n------RSA-DECRYPT-LITE------\n");
 	printf("Cracking d for N=%ld and e=%ld\n", p*q, e);
 	printf("Euler's Totient = %ld\n", phi_f);
 
 	gcd(phi_f, e, &gcds, &rps);
 	
-	crack_d(phi_f, e, &gcds, &rps);
+	crack_d(phi_f, &gcds, &rps);
 
 	return 0;
 }
