@@ -44,7 +44,6 @@ struct rowpointers{
 void gcd(long phi_f, long e, struct gcdstruct *gcds, 
 	struct rowpointers *rps)
 {
-
 	long temp; 
 
 	rps->t1 = gcds->top;
@@ -79,12 +78,10 @@ void gcd(long phi_f, long e, struct gcdstruct *gcds,
 	}
 	
 	else printf("GCD = 1 ... OK.\n");
-
 }
 
 void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
 {
-
 	long temp = 0;	
 	rps->m--;
 	rps->m--;
@@ -113,14 +110,11 @@ void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
 	printf("The decryption value is: %ld\n\n", *(rps->b2));
 }
 	
-
-
 static void usage()
 {
 	printf("usage: enter values p q e\n");
 	exit(1);
 }
-
 
 int main(int argc, char * argv[])
 {
