@@ -59,7 +59,6 @@ void gcd(long phi_f, long e, struct gcdstruct *gcds,
 	rps->t2++;
 	*(rps->t2) = e;
 	
-		
 	printf("Calculating GCD(e, phi_f)...\n");
 
 	while ( *(rps->t2) != 0 ){
@@ -75,13 +74,11 @@ void gcd(long phi_f, long e, struct gcdstruct *gcds,
 
 	if (*(rps->t1) != 1){
 		printf("Invalid p, q or e value(s). GCD(e, phi_f) != 1.\n");
-		printf("Exiting.\n");
-		printf("\n");
+		printf("Exiting.\n\n");
 		exit(1);
 	}
 	
 	else printf("GCD = 1 ... OK.\n");
-
 
 }
 
@@ -106,7 +103,6 @@ void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
 		rps->b2++;
 		rps->b3++;
 		temp++;
-
 	}
 
 	if (temp%2){
@@ -114,9 +110,7 @@ void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
 		*(rps->b2) += phi_f;
 	}
 
-	printf("The decryption value is: %ld\n", *(rps->b2));
-	printf("\n");
-
+	printf("The decryption value is: %ld\n\n", *(rps->b2));
 }
 	
 
