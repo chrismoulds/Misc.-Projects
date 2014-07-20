@@ -35,7 +35,9 @@ struct rowpointers{
 *
 * Compile with gcc -o rsa rsacracker.c 
 * Run with ./rsa -p -q -e where p and q are your prime numbers and e is your
-* public encryption value.
+* public encryption value. Being that modern RSA keys are normally in the order
+* of 1024-2048 bits in length, it is obvious this program is intended for casual
+* use with much much smaller numbers.
 *
 * Author: Chris Moulds
 *
@@ -106,8 +108,24 @@ void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
 		*(rps->b2) = -(*(rps->b2));
 		*(rps->b2) += phi_f;
 	}
+}
 
-	printf("The decryption value is: %ld\n\n", *(rps->b2));
+int validate_d(long e, long phi_f, long *d)
+{
+	printf("Validating d ... ");
+	
+	/*
+	* Since d is the multiplicative inverse of e modulo phi_f,
+	* we can verify it by checking that d*e = 1 modulo phi_f 
+	*/
+	if ( (*d * e)%phi_f ){
+		printf("Ok.\n");
+		return 1;
+	}	
+	else {
+		printf("Error.\n");
+		return -1;
+	}
 }
 	
 static void usage()
@@ -128,6 +146,11 @@ int main(int argc, char * argv[])
 	p = strtoul(argv[1], NULL, 0);
 	q = strtoul(argv[2], NULL, 0);
 	e = strtoul(argv[3], NULL, 0);
+	
+	if (e == -1){
+		printf("e is too large for the implementation ... Exiting.\n");
+		exit(1);
+	}
 
 	phi_f = (p-1)*(q-1);
 
@@ -138,6 +161,11 @@ int main(int argc, char * argv[])
 	gcd(phi_f, e, &gcds, &rps);
 	
 	crack_d(phi_f, &gcds, &rps);
-
+	
+	if (validate_d(phi_f, e, rps.b2))
+		printf("The decryption value is: %ld\n\n", *(rps.b2));
+	else {
+		printf("Decryption Failed.\n\n");
+	}
 	return 0;
 }
