@@ -20,13 +20,13 @@ li $t4 5	# for the modulo
 loop:							# Check if the value is divisible by 5 or 3
 		div $t1 $t3				# If so, that value will be added to the
 		mfhi $t5				# sum variable.
-		beq $t5 $0 addvalue
+		beq $t5 $0 valueok
 
 		div $t1 $t4
 		mfhi $t5
 		bgtz $t5 inc 			
 
-addvalue:						# value is ok ... add it to sum
+valueok:						# value is ok ... add it to sum
 		add $a0 $a0 $t1
 	
 inc:							# increment the counter and check for loop break
