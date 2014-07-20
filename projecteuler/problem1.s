@@ -12,8 +12,8 @@
 main:
 
 li $a0 0	# register to hold the sum variable
-li $t1 3	# counter that will start at 3 and end at 999
-li $t2 1000	# value the counter can compare with for loop breaking.
+li $t1 3	# counter that will start at 3 and end at 1000
+li $t2 1000	# value the counter will compare with for loop breaking.
 li $t3 3	# for the modulo
 li $t4 5	# for the modulo
 
