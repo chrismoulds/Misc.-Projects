@@ -13,13 +13,13 @@
 
 int is_prime(long i)
 {
-	if (i<2)
+    if (i<2)
         return 0;
     else if (i == 2)
         return 1;
     for (long j=2; j<=pow(i, 0.5); j++){ 
     	if (i%j == 0)
-        	return 0;
+            return 0;
     }
     return 1;
 }
