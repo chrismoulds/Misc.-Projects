@@ -15,7 +15,6 @@
 .text
 
 main:
-
 	li $a0 2				# running sum variable
 	li $t0 1 				# used for calculating the current fib value	
 	li $t1 2 				# used for calculating the current fib value
@@ -27,12 +26,12 @@ loop:
 
 	div $t2 $t3				# check if the value is even 
 	mfhi $t5
-	bne $t5 $0 inc_counter	# if it's odd, don't add it to the sum
+	bne $t5 $0 inc_counter			# if it's odd, don't add it to the sum
 
-	add $a0 $a0 $t2			# if it's even, add it to the sum
-
-inc_counter:				# compute next fib variables and check for 
-	add $t0 $0 $t1			# loop break
+	add $a0 $a0 $t2				# if it's even, add it to the sum
+	
+inc_counter:					# compute next fib variables and check for 
+	add $t0 $0 $t1				# loop break
 	add $t1 $0 $t2
 	slt $t4 $t2 4000001
 	bgtz $t4 loop
