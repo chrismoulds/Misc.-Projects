@@ -11,7 +11,7 @@
 
 int is_prime(int i)
 {
-if (i < 2)
+	if (i < 2)
         return 0;
     else if (i == 2)
         return 1;
