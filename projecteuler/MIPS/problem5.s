@@ -9,6 +9,10 @@
 # Author: Chris Moulds
 #------------------------------------------------------------------------------
 
+#-----------------------
+# ****TO BE FINISHED****
+#-----------------------
+
 .data
 
 list: .word 0
@@ -27,7 +31,7 @@ Sieve:
 
 	li $t1 2 				# counter variable
 
-	li $v0 9				#sbrk memory for array
+	li $v0 9				# sbrk memory for list of primes
 	syscall
 
 	sw $v0 list 			# memory allocated
@@ -38,15 +42,12 @@ Outer:
 Inner:	
 
 
-
-
 	lw $ra 4($sp)	
 	addi $sp $sp 4
 	jr $ra
 
 
-
-finish:							# print the final value
+finish:						# print the final value
 	li $v0 1
 	syscall
 
