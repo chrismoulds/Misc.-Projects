@@ -19,14 +19,19 @@ main:
 	li $t0 1 				# used for calculating the current fib value	
 	li $t1 2 				# used for calculating the current fib value
  	li $t2 0				# holding the current fib value
-	li $t3 2 				# for checking modulo 2
 
+#------------------------------------------------------------------------------
+# To avoid performing a costly division operation, we can xor with 1 and shift
+# the result to the most significant spot. Odd values always have an enabled 
+# least significant bit, so the xor combined with a shift will produce a value
+# of zero in the register. This can then be checked. 
+#------------------------------------------------------------------------------
 loop:
 	add $t2 $t0 $t1
 
-	div $t2 $t3				# check if the value is even 
-	mfhi $t5
-	bne $t5 $0 inc_counter			# if it's odd, don't add it to the sum
+	xori $t3 $t2 1				# check if the value is even
+	sll $t3 $t3 31 				
+	beq $t3 $0 inc_counter		# if it's odd, don't add it to the sum
 
 	add $a0 $a0 $t2				# if it's even, add it to the sum
 	
