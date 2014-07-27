@@ -11,6 +11,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/* Used for storing the results of the euclidean algorithm */
 struct gcdstruct{
 	
 	long top[100];
@@ -18,6 +19,7 @@ struct gcdstruct{
 	long bottom[100];
 	};
 
+/* For manipulating the values in the gcdstruct */
 struct rowpointers{
 
 	long *t1; 
@@ -37,13 +39,22 @@ struct rowpointers{
 * Run with ./rsa -p -q -e where p and q are your prime numbers and e is your
 * public encryption value. Being that modern RSA keys are normally in the order
 * of 1024-2048 bits in length, it is obvious this program is intended for casual
-* use with much much smaller numbers.
+* use with much much smaller numbers. 
+*
+* EX.) ./rsa 7 11 13 will output d = 37
+*
 *
 * Author: Chris Moulds
 *
 */
 
-void gcd(long phi_f, long e, struct gcdstruct *gcds, 
+
+/*
+* gcd()
+* Function to verify that the greatest common divisor of e and phi_f = 1
+* Perform the Euclidean algorithm while storing the results in the gcds struct
+*/
+static void gcd(long phi_f, long e, struct gcdstruct *gcds, 
 	struct rowpointers *rps)
 {
 	long temp; 
@@ -82,7 +93,12 @@ void gcd(long phi_f, long e, struct gcdstruct *gcds,
 	else printf("GCD = 1 ... OK.\n");
 }
 
-void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
+/*
+* crack_d()
+* Perform the rest of the algorithm by calculating the linear combination of 
+* terms.
+*/
+static void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
 {
 	long temp = 0;	
 	rps->m--;
@@ -93,7 +109,7 @@ void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
 	rps->b1++;
 	rps->b2++;
 	
-	for (int i=0; i<(rps->size)-1; i++){
+	for (int i = 0; i < (rps->size)-1; i++){
 
 		*(rps->b1) = ( (*(rps->m)) * (*(rps->b2)) ) + *(rps->b3);
 
@@ -110,7 +126,7 @@ void crack_d(long phi_f, struct gcdstruct *gcds, struct rowpointers *rps)
 	}
 }
 
-int validate_d(long e, long phi_f, long *d)
+static int validate_d(long e, long phi_f, long *d)
 {
 	printf("Validating d ... ");
 	
@@ -134,9 +150,33 @@ static void usage()
 	exit(1);
 }
 
+/*
+* Public function used to externally interface with rsacracker
+*/
+int execute_rsa(long p, long q, long e, struct gcdstruct *gcds, 
+				struct rowpointers *rps)
+{
+	// Calculate Euler's Totient
+	long phi_f = (p-1)*(q-1);
+
+	printf("\n------RSA-DECRYPT-LITE------\n");
+	printf("Cracking d for N=%ld and e=%ld\n", p*q, e);
+	printf("Euler's Totient = %ld\n", phi_f);
+
+	gcd(phi_f, e, gcds, rps);
+	
+	crack_d(phi_f, gcds, rps);
+	
+	if (validate_d(phi_f, e, rps->b2))
+		return 1;
+
+	else return 0;
+}
+
+/* Example of how to interface with the decryption value cracker. */
 int main(int argc, char * argv[])
 {
-	long p, q, e, phi_f;
+	long p, q, e;
 	struct gcdstruct gcds;
 	struct rowpointers rps;
 
@@ -152,20 +192,10 @@ int main(int argc, char * argv[])
 		exit(1);
 	}
 
-	phi_f = (p-1)*(q-1);
-
-	printf("\n------RSA-DECRYPT-LITE------\n");
-	printf("Cracking d for N=%ld and e=%ld\n", p*q, e);
-	printf("Euler's Totient = %ld\n", phi_f);
-
-	gcd(phi_f, e, &gcds, &rps);
-	
-	crack_d(phi_f, &gcds, &rps);
-	
-	if (validate_d(phi_f, e, rps.b2))
+	if (execute_rsa(p, q, e, &gcds, &rps))
 		printf("The decryption value is: %ld\n\n", *(rps.b2));
-	else {
+	else 
 		printf("Decryption Failed.\n\n");
-	}
+
 	return 0;
 }
